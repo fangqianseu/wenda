@@ -5,6 +5,7 @@ package com.fq.controller;
 
 import com.fq.model.SessionHolder;
 import com.fq.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,8 @@ public class LogController {
     private SessionHolder sessionHolder;
 
     @RequestMapping(value = "/reglogin", method = RequestMethod.GET)
-    public String regloginPage() {
+    public String regloginPage(Model model, @RequestParam(value = "next", required = false) String next) {
+        model.addAttribute("next", next);
         return "login";
     }
 
@@ -46,6 +48,8 @@ public class LogController {
         if (map.containsKey("ticket")) {
             addCookie(rememberme, response, map.get("ticket").toString());
         }
+        if (!StringUtils.isBlank(next))
+            return "redirect:" + next;
 
         return "redirect:/";
     }
@@ -67,6 +71,8 @@ public class LogController {
             addCookie(rememberme, response, map.get("ticket").toString());
         }
 
+        if (!StringUtils.isBlank(next))
+            return "redirect:" + next;
         return "redirect:/";
 
     }

@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         logger.info("get in userintercepor...");
         if (sessionHolder.getUser() == null) {
-            httpServletResponse.sendRedirect("/reglogin");
+            httpServletResponse.sendRedirect("/reglogin?next=" + httpServletRequest.getRequestURI());
             return false;
         }
         return true;
