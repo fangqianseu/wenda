@@ -15,8 +15,10 @@ public interface UserDao {
             "(#{name},#{password},#{salt})"})
     int addUser(User user);
 
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id = {#id}"})
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id = #{id}"})
     User selectUserById(int id);
 
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where name = #{name}"})
+    User selectUserByname(String name);
 
 }
