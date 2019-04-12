@@ -8,6 +8,7 @@ import com.fq.model.Question;
 import com.fq.model.SessionHolder;
 import com.fq.model.ViewObject;
 import com.fq.service.CommentService;
+import com.fq.service.FollowService;
 import com.fq.service.QuestionService;
 import com.fq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class IndexController {
     private SessionHolder sessionHolder;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private FollowService followService;
 
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
     public String index(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -39,6 +42,7 @@ public class IndexController {
             ViewObject vo = new ViewObject();
             vo.set("question", q);
             vo.set("user", userService.getUserById(q.getUserId()));
+            vo.set("followCount", followService.getFollowersCount(q.getId(), EntityType.ENTITY_QUESTION));
             questions.add(vo);
         }
         model.addAttribute("vos", questions);

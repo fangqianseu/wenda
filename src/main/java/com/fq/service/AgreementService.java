@@ -23,7 +23,6 @@ public class AgreementService {
             agreementDao.addAgreement(agreement);
         } else {
             agreement.setId(temp.getId());
-            logger.info(agreement.getId() + " " + agreement.getStatus());
             agreementDao.updateAgreementStatus(agreement);
         }
     }

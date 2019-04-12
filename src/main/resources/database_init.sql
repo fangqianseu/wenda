@@ -68,3 +68,15 @@ INDEX `entity_index` (`entity_id`, `entity_type`)
   `created_date` DATETIME NOT NULL,
   INDEX `entity_index` (`entity_id`, `entity_type`)
   );
+
+--  关注表
+  DROP TABLE IF EXISTS `follows`;
+  CREATE TABLE `follows` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `entity_id` INT NOT NULL,
+  `entity_type` INT NOT NULL,
+  `status` INT NOT NULL DEFAULT 0,
+  `created_date` DATETIME NOT NULL,
+  INDEX `entity_index` (`entity_id`, `entity_type`)
+  );

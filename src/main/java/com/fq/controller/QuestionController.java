@@ -4,10 +4,7 @@ Date: 04/11,2019, 15:00
 package com.fq.controller;
 
 import com.fq.model.*;
-import com.fq.service.AgreementService;
-import com.fq.service.CommentService;
-import com.fq.service.QuestionService;
-import com.fq.service.UserService;
+import com.fq.service.*;
 import com.fq.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +27,8 @@ public class QuestionController {
     private UserService userService;
     @Autowired
     private AgreementService agreementService;
+    @Autowired
+    private FollowService followService;
 
     @ResponseBody
     @RequestMapping(value = "/question/add", method = RequestMethod.POST)
@@ -67,13 +66,35 @@ public class QuestionController {
             if (sessionHolder.getUser() == null)
                 vo.set("liked", 0);
             else
-                vo.set("liked", agreementService.getAgreeStatus(sessionHolder.getUser().getId(),comment.getId(),EntityType.ENTITY_COMMENT));
+                vo.set("liked", agreementService.getAgreeStatus(sessionHolder.getUser().getId(), comment.getId(), EntityType.ENTITY_COMMENT));
             vo.set("likeCount", agreementService.getAgreementCount(comment.getId(), EntityType.ENTITY_COMMENT));
 
             vo.set("user", userService.getUserById(comment.getUserId()));
             comments.add(vo);
         }
         model.addAttribute("comments", comments);
+
+        // 获取所有关注了该问题的用户
+        List<ViewObject> followUsers = new ArrayList<>();
+        List<Follow> followsList = followService.getFollowers(qid, EntityType.ENTITY_QUESTION);
+        for (Follow follow : followsList) {
+            ViewObject vo = new ViewObject();
+            User user = userService.getUserById(follow.getUserId());
+            if (user == null) continue;
+            vo.set("name", user.getName());
+            vo.set("headUrl", user.getHeadUrl());
+            vo.set("id", user.getId());
+            followUsers.add(vo);
+        }
+        model.addAttribute("followUsers", followUsers);
+
+        // 判断当前用户是否关注
+        if (sessionHolder.getUser() == null) {
+            model.addAttribute("followed", false);
+        } else {
+            boolean status = followService.isFollow(sessionHolder.getUser().getId(), qid, EntityType.ENTITY_QUESTION);
+            model.addAttribute("followed",status );
+        }
 
         return "detail";
     }
