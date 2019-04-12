@@ -4,6 +4,7 @@ Date: 04/11,2019, 15:00
 package com.fq.controller;
 
 import com.fq.model.*;
+import com.fq.service.AgreementService;
 import com.fq.service.CommentService;
 import com.fq.service.QuestionService;
 import com.fq.service.UserService;
@@ -27,6 +28,8 @@ public class QuestionController {
     private CommentService commentService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AgreementService agreementService;
 
     @ResponseBody
     @RequestMapping(value = "/question/add", method = RequestMethod.POST)
@@ -61,8 +64,11 @@ public class QuestionController {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
 
-            vo.set("liked", 11);
-            vo.set("likeCount",12);
+            if (sessionHolder.getUser() == null)
+                vo.set("liked", 0);
+            else
+                vo.set("liked", agreementService.getAgreeStatus(sessionHolder.getUser().getId(),comment.getId(),EntityType.ENTITY_COMMENT));
+            vo.set("likeCount", agreementService.getAgreementCount(comment.getId(), EntityType.ENTITY_COMMENT));
 
             vo.set("user", userService.getUserById(comment.getUserId()));
             comments.add(vo);

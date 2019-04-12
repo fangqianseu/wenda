@@ -46,7 +46,8 @@ public class MessageController {
         for (Message message : messages) {
             ViewObject vo = new ViewObject();
             vo.set("message", message);
-            vo.set("user", userService.getUserById(message.getFromId()));
+            int targetId = message.getFromId() == sessionHolder.getUser().getId() ? message.getToId() : message.getFromId();
+            vo.set("user", userService.getUserById(targetId));
             vo.set("unread", messageService.getMessageUnreadCount(sessionHolder.getUser().getId(), message.getConversationId()));
             vos.add(vo);
         }

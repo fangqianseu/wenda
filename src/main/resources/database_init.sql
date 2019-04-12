@@ -56,3 +56,15 @@ INDEX `entity_index` (`entity_id`, `entity_type`)
   `conversation_id` VARCHAR(45) NOT NULL,
   INDEX `conversation_index` (`conversation_id`),
   INDEX `created_date` (`created_date`));
+
+--  赞同表
+  DROP TABLE IF EXISTS `agreement`;
+  CREATE TABLE `agreement` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `entity_id` INT NOT NULL,
+  `entity_type` INT NOT NULL,
+  `status` INT NOT NULL DEFAULT 0,
+  `created_date` DATETIME NOT NULL,
+  INDEX `entity_index` (`entity_id`, `entity_type`)
+  );
