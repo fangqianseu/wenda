@@ -29,4 +29,12 @@ public class CommentService {
     public List<Comment> selectCommentByEntry(int entityId, int entityType) {
         return commentDao.selectCommentByEntity(entityId, entityType);
     }
+
+    public int getCommentcount(int entryId, int entryType) {
+        return commentDao.getCommentCountofQuestion(entryId, entryType);
+    }
+
+    public int getCommentcountByUserId(int UserId) {
+        return commentDao.getCommentCountbyUserId(UserId);
+    }
 }

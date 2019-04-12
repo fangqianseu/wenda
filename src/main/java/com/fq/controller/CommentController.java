@@ -7,6 +7,7 @@ import com.fq.model.Comment;
 import com.fq.model.EntityType;
 import com.fq.model.SessionHolder;
 import com.fq.service.CommentService;
+import com.fq.service.QuestionService;
 import com.fq.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ public class CommentController {
     private SessionHolder sessionHolder;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private QuestionService questionService;
 
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     public String commentAdd(@RequestParam int questionId, @RequestParam String content) {
@@ -39,6 +42,7 @@ public class CommentController {
         comment.setStatus(0);
 
         commentService.commitAdd(comment);
+        questionService.updateComment(questionId, commentService.getCommentcount(questionId, EntityType.ENTITY_QUESTION));
 
         return "redirect:/question/" + questionId;
     }
