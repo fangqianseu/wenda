@@ -61,6 +61,9 @@ public class QuestionController {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
 
+            vo.set("liked", 11);
+            vo.set("likeCount",12);
+
             vo.set("user", userService.getUserById(comment.getUserId()));
             comments.add(vo);
         }

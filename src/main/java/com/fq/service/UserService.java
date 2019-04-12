@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
 public class UserService {
+    private String headUrl = "https://avatars0.githubusercontent.com/u/";
     @Autowired
     private UserDao userDao;
 
@@ -51,6 +53,7 @@ public class UserService {
 
         User user = new User();
         user.setName(username);
+        user.setHeadUrl(headUrl+ new Random().nextInt(20000));
         user.setSalt(UUID.randomUUID().toString().substring(0, 4));
         user.setPassword(DigestUtils.md5Hex(password + user.getSalt()));
         userDao.addUser(user);
@@ -91,6 +94,10 @@ public class UserService {
 
     public User getUserById(int id) {
         return userDao.selectUserById(id);
+    }
+
+    public User getUserByName(String name) {
+        return userDao.selectUserByname(name);
     }
 
     public void loginout(String ticket) {

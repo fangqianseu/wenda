@@ -21,7 +21,7 @@ public class WendaConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginTicketInterceper);
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/user/*");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/user/*", "/msg/*");
         super.addInterceptors(registry);
     }
 }

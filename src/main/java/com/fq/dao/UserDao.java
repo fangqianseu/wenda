@@ -8,11 +8,11 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserDao {
     String TABLE_NAME = "user";
-    String INSET_FIELDS = " name, password, salt ";
-    String SELECT_FIELDS = " id, name, password, salt";
+    String INSET_FIELDS = " name, password, salt, head_url ";
+    String SELECT_FIELDS = " id, name, password, salt, head_url";
 
     @Insert({"insert ", TABLE_NAME, " (", INSET_FIELDS, ") values " +
-            "(#{name},#{password},#{salt})"})
+            "(#{name},#{password},#{salt},#{headUrl})"})
     int addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id = #{id}"})

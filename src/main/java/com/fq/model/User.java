@@ -8,6 +8,7 @@ public class User {
     private String name;
     private String password;
     private String salt;
+    private String headUrl;
 
     public int getId() {
         return id;
@@ -41,14 +42,12 @@ public class User {
         this.salt = salt;
     }
 
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                '}';
+    public String getHeadUrl() {
+        return headUrl;
     }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
 }
