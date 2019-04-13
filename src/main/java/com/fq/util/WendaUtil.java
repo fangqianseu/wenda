@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class WendaUtil {
     // 未登录用户的user id
-    public static int ANONYMOUS_USERID = 0;
+    public static final int ANONYMOUS_USERID = 0;
     // 系统用户
-    public static int SYSTEM_USERID = 1;
+    public static final int SYSTEM_USERID = 1;
 
     // ajax 请求 的返回码
     public static String getJSONString(int code) {

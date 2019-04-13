@@ -41,7 +41,7 @@ public class MessageController {
     public String getConversationList(Model model, @RequestParam(defaultValue = "0") String page) {
         List<ViewObject> vos = new ArrayList<>();
         List<Message> messages = messageService.getMessagesbyUserId(sessionHolder.getUser().getId(),
-                Integer.valueOf(page) * 10, 10);
+                Integer.parseInt(page) * 10, 10);
 
         for (Message message : messages) {
             ViewObject vo = new ViewObject();
@@ -86,7 +86,7 @@ public class MessageController {
     public String msgDetail(Model model, @RequestParam(defaultValue = "0") String page,
                             @RequestParam String conversationId) {
         List<ViewObject> vos = new ArrayList<>();
-        List<Message> messageList = messageService.getMessagesbyconversationId(conversationId, 10 * Integer.valueOf(page), 10);
+        List<Message> messageList = messageService.getMessagesbyconversationId(conversationId, 10 * Integer.parseInt(page), 10);
 
         for (Message message : messageList) {
             if (sessionHolder.getUser().getId() == message.getToId())

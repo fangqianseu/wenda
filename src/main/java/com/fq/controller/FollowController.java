@@ -72,8 +72,6 @@ public class FollowController {
 
     @RequestMapping(path = {"/user/{uid}/followees"}, method = {RequestMethod.GET})
     public String followees(Model model, @PathVariable("uid") int userId) {
-        ViewObject vos = new ViewObject();
-
         model.addAttribute("curUser", userService.getUserById(userId));
         model.addAttribute("followeeCount", followService.getFolloweesCount(userId, EntityType.ENTITY_USER));
 
@@ -85,7 +83,6 @@ public class FollowController {
 
     @RequestMapping(path = {"/user/{uid}/followers"}, method = {RequestMethod.GET})
     public String followers(Model model, @PathVariable("uid") int userId) {
-        ViewObject vos = new ViewObject();
 
         model.addAttribute("curUser", userService.getUserById(userId));
         model.addAttribute("followerCount", followService.getFollowersCount(userId, EntityType.ENTITY_USER));

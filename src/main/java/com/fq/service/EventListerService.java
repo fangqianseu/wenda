@@ -98,11 +98,11 @@ public class EventListerService implements InitializingBean, ApplicationContextA
         this.applicationContext = applicationContext;
     }
 
-    class EventModelTask implements Runnable {
+    private static class EventModelTask implements Runnable {
         private EventHandler handler;
         private EventModel eventModel;
 
-        public EventModelTask(EventHandler handler, EventModel eventModel) {
+        private EventModelTask(EventHandler handler, EventModel eventModel) {
             this.handler = handler;
             this.eventModel = eventModel;
         }

@@ -27,7 +27,7 @@ public class AgreementHandler implements EventHandler {
     public void doHandle(EventModel model) {
         Message message = new Message();
 
-        message.setToId(Integer.valueOf(model.getEventDetial("toUser")));
+        message.setToId(Integer.parseInt(model.getEventDetial("toUser")));
         message.setFromId(WendaUtil.SYSTEM_USERID);
         message.setContent(String.format("用户 %s 赞同了你关于问题 (%s) 的回答, 快去看一看吧",
                 model.getEventDetial("userName"),

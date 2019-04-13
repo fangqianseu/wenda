@@ -94,7 +94,7 @@ public class SensitiveService implements InitializingBean {
         initTrieTree();
     }
 
-    class TrieTree {
+    private static class TrieTree {
         private boolean end = false;
 
         private Map<Character, TrieTree> subNodes = new HashMap<>();
