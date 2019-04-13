@@ -3,10 +3,13 @@ Date: 04/12,2019, 15:07
 */
 package com.fq.controller;
 
+import com.fq.async.EventModel;
+import com.fq.async.EventType;
 import com.fq.model.Agreement;
 import com.fq.model.EntityType;
 import com.fq.model.SessionHolder;
 import com.fq.service.AgreementService;
+import com.fq.service.EventProducerService;
 import com.fq.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,8 @@ public class AgreementController {
     private AgreementService agreementService;
     @Autowired
     private SessionHolder sessionHolder;
+    @Autowired
+    private EventProducerService eventProducerService;
 
     @ResponseBody
     @RequestMapping(value = "/like", method = RequestMethod.POST)
@@ -31,8 +36,16 @@ public class AgreementController {
             return WendaUtil.getJSONString(999);
 
         agreementService.agree(buildAgreement(commentId, 0));
-
         int agreementCount = agreementService.getAgreementCount(commentId, EntityType.ENTITY_COMMENT);
+
+        EventModel eventModel = new EventModel();
+        eventModel.setType(EventType.AGREEMENT);
+        eventModel.setDate(new Date());
+        eventModel.setEntityId(sessionHolder.getUser().getId());
+        eventModel.setEntityType(EntityType.ENTITY_USER);
+        eventModel.setEventDetial("touser","1").setEventDetial("qid","2");
+        eventProducerService.commitEventModel(eventModel);
+
         return WendaUtil.getJSONString(0, String.valueOf(agreementCount));
     }
 
