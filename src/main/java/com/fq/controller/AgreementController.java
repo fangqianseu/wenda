@@ -3,13 +3,13 @@ Date: 04/12,2019, 15:07
 */
 package com.fq.controller;
 
-import com.fq.async.EventModel;
-import com.fq.async.EventType;
+import com.fq.async.producer.AgreementProducer;
 import com.fq.model.Agreement;
 import com.fq.model.EntityType;
 import com.fq.model.SessionHolder;
 import com.fq.service.AgreementService;
-import com.fq.service.EventProducerService;
+import com.fq.service.CommentService;
+import com.fq.service.UserService;
 import com.fq.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,11 @@ public class AgreementController {
     @Autowired
     private SessionHolder sessionHolder;
     @Autowired
-    private EventProducerService eventProducerService;
+    private AgreementProducer agreementProducer;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CommentService commentService;
 
     @ResponseBody
     @RequestMapping(value = "/like", method = RequestMethod.POST)
@@ -38,13 +42,10 @@ public class AgreementController {
         agreementService.agree(buildAgreement(commentId, 0));
         int agreementCount = agreementService.getAgreementCount(commentId, EntityType.ENTITY_COMMENT);
 
-        EventModel eventModel = new EventModel();
-        eventModel.setType(EventType.AGREEMENT);
-        eventModel.setDate(new Date());
-        eventModel.setEntityId(sessionHolder.getUser().getId());
-        eventModel.setEntityType(EntityType.ENTITY_USER);
-        eventModel.setEventDetial("touser","1").setEventDetial("qid","2");
-        eventProducerService.commitEventModel(eventModel);
+        // 引入异步事件 -- agreementEvent
+        int toUserId = commentService.selectCommentById(commentId).getUserId();
+        agreementProducer.buildEventModel(sessionHolder.getUser().getId(),
+                toUserId, userService.getUserById(toUserId).getName(), commentService.selectCommentById(commentId).getEntityId());
 
         return WendaUtil.getJSONString(0, String.valueOf(agreementCount));
     }

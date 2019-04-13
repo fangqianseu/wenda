@@ -9,6 +9,7 @@ import com.fq.async.EventType;
 import com.fq.model.Message;
 import com.fq.service.MessageService;
 import com.fq.service.UserService;
+import com.fq.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +27,11 @@ public class AgreementHandler implements EventHandler {
     public void doHandle(EventModel model) {
         Message message = new Message();
 
-        message.setToId(Integer.valueOf(model.getEventDetial("touser")));
-        message.setFromId(model.getEntityId());
-        message.setContent(String.format("用户 %s 赞同了你的回答 %s",
-                userService.getUserById(model.getEntityId()).getName(),
-                "http:/127.0.0.1:8080/question/" + model.getEventDetial("qid")));
+        message.setToId(Integer.valueOf(model.getEventDetial("toUser")));
+        message.setFromId(WendaUtil.SYSTEM_USERID);
+        message.setContent(String.format("用户 %s 赞同了你关于问题 (%s) 的回答, 快去看一看吧",
+                model.getEventDetial("userName"),
+                "http:/127.0.0.1:8080/question/" + model.getEventDetial("qusetionId")));
         message.setHasRead(0);
         message.setCreatedDate(model.getDate());
 

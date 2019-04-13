@@ -14,23 +14,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@PropertySource({"classpath:my.properties"})
 public class EventListerService implements InitializingBean, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(EventListerService.class);
     private ApplicationContext applicationContext;
     private Map<EventType, List<EventHandler>> eventListerConfig = new HashMap<>();
+    private ThreadPoolExecutor threadpool;
+
     @Autowired
     private JedisAdapter jedisAdapter;
 
+    @Value("${threadpool.poolsize}")
+    private int poolsize;
 
     @Override
     /**
@@ -48,6 +58,8 @@ public class EventListerService implements InitializingBean, ApplicationContextA
                 }
             }
         }
+
+        threadpool = new ThreadPoolExecutor(poolsize, poolsize, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
         beginLister();
     }
 
@@ -55,16 +67,16 @@ public class EventListerService implements InitializingBean, ApplicationContextA
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true){
+                while (true) {
                     String key = RedisKeyUtil.getEventQueueKey();
                     List<String> events = jedisAdapter.brpop(0, key);
 
-                    for (String message:events){
+                    for (String message : events) {
                         // redis返回的第一行为key
                         if (message.equals(key)) {
                             continue;
                         }
-
+                        logger.info("Get Event from redis: " + message);
                         //处理事件
                         EventModel eventModel = JSON.parseObject(message, EventModel.class);
                         if (!eventListerConfig.containsKey(eventModel.getType())) {
@@ -73,7 +85,7 @@ public class EventListerService implements InitializingBean, ApplicationContextA
                         }
 
                         for (EventHandler handler : eventListerConfig.get(eventModel.getType())) {
-                            handler.doHandle(eventModel);
+                            threadpool.execute(new EventModelTask(handler, eventModel));
                         }
                     }
                 }
@@ -84,5 +96,20 @@ public class EventListerService implements InitializingBean, ApplicationContextA
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    class EventModelTask implements Runnable {
+        private EventHandler handler;
+        private EventModel eventModel;
+
+        public EventModelTask(EventHandler handler, EventModel eventModel) {
+            this.handler = handler;
+            this.eventModel = eventModel;
+        }
+
+        @Override
+        public void run() {
+            handler.doHandle(eventModel);
+        }
     }
 }
