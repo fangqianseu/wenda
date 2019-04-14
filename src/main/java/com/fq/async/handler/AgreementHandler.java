@@ -40,6 +40,6 @@ public class AgreementHandler implements EventHandler {
 
     @Override
     public List<EventType> getSupportEventTypes() {
-        return Arrays.asList(EventType.AGREEMENT);
+        return Arrays.asList(EventType.COMMENT_AGREEMENT);
     }
 }

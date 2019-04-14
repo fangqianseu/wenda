@@ -3,7 +3,7 @@ Date: 04/12,2019, 15:07
 */
 package com.fq.controller;
 
-import com.fq.async.producer.AgreementProducer;
+import com.fq.async.producer.CommmentAgreementProducer;
 import com.fq.model.Agreement;
 import com.fq.model.EntityType;
 import com.fq.model.SessionHolder;
@@ -27,7 +27,7 @@ public class AgreementController {
     @Autowired
     private SessionHolder sessionHolder;
     @Autowired
-    private AgreementProducer agreementProducer;
+    private CommmentAgreementProducer COMMENTAGREEMENTProducer;
     @Autowired
     private UserService userService;
     @Autowired
@@ -44,7 +44,7 @@ public class AgreementController {
 
         // 引入异步事件 -- agreementEvent
         int toUserId = commentService.selectCommentById(commentId).getUserId();
-        agreementProducer.buildEventModel(sessionHolder.getUser().getId(),
+        COMMENTAGREEMENTProducer.buildEventModel(sessionHolder.getUser().getId(),
                 toUserId, userService.getUserById(toUserId).getName(), commentService.selectCommentById(commentId).getEntityId());
 
         return WendaUtil.getJSONString(0, String.valueOf(agreementCount));

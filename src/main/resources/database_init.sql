@@ -80,3 +80,14 @@ INDEX `entity_index` (`entity_id`, `entity_type`)
   `created_date` DATETIME NOT NULL,
   INDEX `entity_index` (`entity_id`, `entity_type`)
   );
+
+-- feed 表
+  DROP TABLE IF EXISTS `feed`;
+  CREATE TABLE `feed` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `created_date` DATETIME NULL,
+  `user_id` INT NULL,
+  `data` TINYTEXT NULL,
+  `type` INT NULL,
+  INDEX `user_index` (`user_id`)
+  );

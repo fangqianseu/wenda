@@ -11,7 +11,7 @@
     +  EventHandler 实现 EventHandler  接口，在启动时自动注册，EventType-EventHandler  的mapping
     + 编写 EventModel 的生产 和 消费 统一入口，利用 redis 中的 list 作为消息队列
     + 一个线程监听 redis list，得到一个 EventModel后，分发给线程池，调用对应 EventHandler 的事件处理函数
-
++ 添加 feed流 逻辑，通过注册 EventHandler 来实现
 Todo:
 
 + 用户评论 赞同数

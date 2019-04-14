@@ -15,8 +15,8 @@ import java.util.HashMap;
 
 
 @Component
-public class AgreementProducer {
-    private final Logger logger = LoggerFactory.getLogger(AgreementProducer.class);
+public class CommmentAgreementProducer {
+    private final Logger logger = LoggerFactory.getLogger(CommmentAgreementProducer.class);
     @Autowired
     private EventProducerService eventProducerService;
 
@@ -27,6 +27,6 @@ public class AgreementProducer {
         map.put("userName", userName);
         map.put("qusetionId", String.valueOf(qid));
 
-        return eventProducerService.creatEventModel(EventType.AGREEMENT, userId, EntityType.ENTITY_USER, map);
+        return eventProducerService.creatEventModel(EventType.COMMENT_AGREEMENT, userId, EntityType.ENTITY_USER, map);
     }
 }

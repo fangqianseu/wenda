@@ -3,6 +3,7 @@ Date: 04/11,2019, 15:00
 */
 package com.fq.controller;
 
+import com.fq.async.EventType;
 import com.fq.model.*;
 import com.fq.service.*;
 import com.fq.util.WendaUtil;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -29,6 +31,8 @@ public class QuestionController {
     private AgreementService agreementService;
     @Autowired
     private FollowService followService;
+    @Autowired
+    private EventProducerService eventProducerService;
 
     @ResponseBody
     @RequestMapping(value = "/question/add", method = RequestMethod.POST)
@@ -45,9 +49,10 @@ public class QuestionController {
         userid = sessionHolder.getUser().getId();
         question.setUserId(userid);
 
-        if (questionService.addQuestion(question) > 0)
+        if (questionService.addQuestion(question) > 0) {
+            eventProducerService.creatEventModel(EventType.QUESTION_ADD, userid, EntityType.ENTITY_QUESTION, new HashMap<String, String>());
             return WendaUtil.getJSONString(0);
-        else
+        } else
             return WendaUtil.getJSONString(1, "失败");
     }
 
@@ -93,7 +98,7 @@ public class QuestionController {
             model.addAttribute("followed", false);
         } else {
             boolean status = followService.isFollow(sessionHolder.getUser().getId(), qid, EntityType.ENTITY_QUESTION);
-            model.addAttribute("followed",status );
+            model.addAttribute("followed", status);
         }
 
         return "detail";
