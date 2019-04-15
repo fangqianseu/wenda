@@ -11,6 +11,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class JedisAdapter {
@@ -125,4 +126,36 @@ public class JedisAdapter {
     }
 
 
+    public long hset(String key, Map<String, String> map) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                jedis.hset(key, entry.getKey(), entry.getValue());
+            }
+            return 1;
+        } catch (Exception e) {
+            logger.error("发生异常" + e.toString());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public String hget(String key, String field) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.hget(key, field);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.toString());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
 }

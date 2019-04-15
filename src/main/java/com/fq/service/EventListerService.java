@@ -16,7 +16,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ public class EventListerService implements InitializingBean, ApplicationContextA
     private ApplicationContext applicationContext;
     private Map<EventType, List<EventHandler>> eventListerConfig = new HashMap<>();
 
-//    @Autowired
-//    private TaskExecutor threadpool;
+    @Autowired
+    private ThreadPoolTaskExecutor threadpool;
 
     @Autowired
     private JedisAdapter jedisAdapter;
@@ -81,6 +81,15 @@ public class EventListerService implements InitializingBean, ApplicationContextA
                         for (EventHandler handler : eventListerConfig.get(eventModel.getType())) {
 //                            threadpool.execute(new EventModelTask(handler, eventModel));
                             handler.doHandle(eventModel);
+                        }
+                    }
+
+                    // 避免堆积太多任务
+                    if (threadpool.getThreadPoolExecutor().getQueue().size() > 200) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
                 }

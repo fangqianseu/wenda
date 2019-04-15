@@ -8,7 +8,6 @@ import com.fq.model.SessionHolder;
 import com.fq.model.User;
 import com.fq.service.TicketService;
 import com.fq.service.UserService;
-import com.fq.service.cacheservice.LoginCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,8 +20,8 @@ import java.util.Date;
 
 @Component
 public class LoginTicketInterceper implements HandlerInterceptor {
-    @Autowired
-    private LoginCacheService loginCacheService;
+    //    @Autowired
+//    private LoginTicketCacheService loginTicketCacheService;
     @Autowired
     private TicketService ticketService;
 
@@ -44,24 +43,31 @@ public class LoginTicketInterceper implements HandlerInterceptor {
 
         int userId;
         if (c != null) {
-            String res = loginCacheService.getLoginTicket(c.getValue());
-            if (res != null) {
-                userId = Integer.parseInt(res);
-            } else {
-                LoginTicket ticket = ticketService.getTicketByTicket(c.getValue());
+//            String res = loginTicketCacheService.getLoginTicket(c.getValue());
+//            if (res != null) {
+//                userId = Integer.parseInt(res);
+//            } else {
+//                LoginTicket ticket = ticketService.getTicketByTicket(c.getValue());
+//
+//                if (ticket == null || new Date().after(ticket.getExpired()) || ticket.getStatus() != 0)
+//                    return true;
+//
+//                userId = ticket.getUserId();
+//                long expireSeconds = ticket.getExpired().getTime() - new Date().getTime();
+//                expireSeconds = expireSeconds >= 0 ? expireSeconds / 1000 : 0;
+//                loginTicketCacheService.addLoginCache(ticket.getTicket(), (int) expireSeconds, userId);
+//            }
 
-                if (ticket == null || new Date().after(ticket.getExpired()) || ticket.getStatus() != 0)
-                    return true;
 
-                userId = ticket.getUserId();
-                long expireSeconds = ticket.getExpired().getTime() - new Date().getTime();
-                expireSeconds = expireSeconds >= 0 ? expireSeconds / 1000 : 0;
-                loginCacheService.addLoginCache(ticket.getTicket(), (int) expireSeconds, userId);
+            LoginTicket ticket = ticketService.getTicketByTicket(c.getValue());
+            if (ticket == null || ticket.getStatus() != 0) return true;
+            if (new Date().after(ticket.getExpired())) {
+                ticketService.delectTicket(ticket.getTicket());
+                return true;
             }
-
+            userId = ticket.getUserId();
             User user = userService.getUserById(userId);
             sessionHolder.setUser(user);
-
         }
         return true;
     }

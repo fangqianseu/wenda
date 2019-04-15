@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginCacheService {
-    private static final Logger logger = LoggerFactory.getLogger(LoginCacheService.class);
+public class LoginTicketCacheService {
+    private static final Logger logger = LoggerFactory.getLogger(LoginTicketCacheService.class);
     @Autowired
     private JedisAdapter jedisAdapter;
 

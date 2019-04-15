@@ -12,5 +12,5 @@
     + 编写 EventModel 的生产 和 消费 统一入口，利用 redis 中的 list 作为消息队列
     + 一个线程监听 redis list，得到一个 EventModel后，分发给线程池，调用对应 EventHandler 的事件处理函数
 + 添加 feed流 逻辑，通过注册 EventHandler 来实现
-+ 添加 redis 缓存 数据库数据，并利用异步框架解决数据库、redis数据一致性问题
++ 添加 redis 缓存 数据库数据，解决数据库、redis数据一致性问题
     + 用户登录缓存: 将已登录用户 ticket 保存在 redis 中，避免重复查询数据库；

@@ -5,7 +5,6 @@ package com.fq.controller;
 
 import com.fq.model.SessionHolder;
 import com.fq.service.UserService;
-import com.fq.service.cacheservice.LoginCacheService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +22,8 @@ import java.util.Map;
 public class LogController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private LoginCacheService loginCacheService;
+    //    @Autowired
+//    private LoginTicketCacheService loginTicketCacheService;
     @Autowired
     private SessionHolder sessionHolder;
 
@@ -49,7 +48,7 @@ public class LogController {
 
         if (map.containsKey("ticket")) {
             String ticket = map.get("ticket").toString();
-            loginCacheService.addLoginCache(ticket, 3600 * 24 * 7, Integer.parseInt(map.get("userId").toString()));
+//            loginTicketCacheService.addLoginCache(ticket, 3600 * 24 * 7, Integer.parseInt(map.get("userId").toString()));
             addCookie(rememberme, response, ticket);
         }
         if (!StringUtils.isBlank(next))
@@ -73,7 +72,7 @@ public class LogController {
 
         if (map.containsKey("ticket")) {
             String ticket = map.get("ticket").toString();
-            loginCacheService.addLoginCache(ticket, 3600 * 24 * 7, Integer.parseInt(map.get("userId").toString()));
+//            loginTicketCacheService.addLoginCache(ticket, 3600 * 24 * 7, Integer.parseInt(map.get("userId").toString()));
             addCookie(rememberme, response, ticket);
         }
 
@@ -95,7 +94,7 @@ public class LogController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(@CookieValue("ticket") String ticket) {
-        loginCacheService.removeLoginCache(ticket);
+//        loginTicketCacheService.removeLoginCache(ticket);
         userService.loginout(ticket);
         return "redirect:/";
     }

@@ -96,7 +96,7 @@ public class UserService {
         }
 
         String ticket = ticketService.addTicket(user.getId());
-        logger.info("ticket add: " + ticket);
+        logger.info("User login: " + ticket);
 
         map.put("ticket", ticket);
         map.put("userId", user.getId());
@@ -115,7 +115,7 @@ public class UserService {
     }
 
     public void loginout(String ticket) {
-        logger.info("ticket delect: " + ticket);
+        logger.info("User loginout: " + ticket);
         ticketService.delectTicket(ticket);
     }
 }
