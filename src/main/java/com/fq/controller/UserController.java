@@ -46,7 +46,7 @@ public class UserController {
         userviewObject.set("followerCount", followService.getFollowersCount(id, EntityType.ENTITY_USER));
         userviewObject.set("followeeCount", followService.getFolloweesCount(id, EntityType.ENTITY_USER));
         List<Integer> commentIds = commentService.selectCommentIdsByUserId(user.getId());
-        logger.info(commentIds.toString());
+
         int agreementCount = 0;
         if (commentIds.size() != 0) {
             agreementCount = agreementService.getAgreementCountByUserIds(commentIds, EntityType.ENTITY_COMMENT);

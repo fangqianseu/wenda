@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisConfiration {
 
     @Bean
-    @Qualifier(value ="JedisPoolConfig" )
+    @Qualifier(value = "JedisPoolConfig")
     public JedisPool JedisPoolBean(JedisPoolConfig jedisPoolConfig) {
         return new JedisPool(jedisPoolConfig, "localhost", 6379);
     }

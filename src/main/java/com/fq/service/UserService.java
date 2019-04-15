@@ -8,6 +8,8 @@ import com.fq.model.SessionHolder;
 import com.fq.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.UUID;
 
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private String headUrl = "https://avatars0.githubusercontent.com/u/";
     @Autowired
     private UserDao userDao;
@@ -53,13 +56,19 @@ public class UserService {
 
         User user = new User();
         user.setName(username);
-        user.setHeadUrl(headUrl+ new Random().nextInt(20000));
+        user.setHeadUrl(headUrl + new Random().nextInt(20000));
         user.setSalt(UUID.randomUUID().toString().substring(0, 4));
         user.setPassword(DigestUtils.md5Hex(password + user.getSalt()));
         userDao.addUser(user);
 
+        logger.info("User register: " + user.toString());
+
         String ticket = ticketService.addTicket(user.getId());
+
+        logger.info("ticket add: " + ticket);
+
         map.put("ticket", ticket);
+        map.put("userId", user.getId());
 
         return map;
     }
@@ -87,20 +96,26 @@ public class UserService {
         }
 
         String ticket = ticketService.addTicket(user.getId());
+        logger.info("ticket add: " + ticket);
+
         map.put("ticket", ticket);
+        map.put("userId", user.getId());
 
         return map;
     }
 
     public User getUserById(int id) {
+        logger.info("User query By Id: " + id);
         return userDao.selectUserById(id);
     }
 
     public User getUserByName(String name) {
+        logger.info("User query By name: " + name);
         return userDao.selectUserByname(name);
     }
 
     public void loginout(String ticket) {
+        logger.info("ticket delect: " + ticket);
         ticketService.delectTicket(ticket);
     }
 }
