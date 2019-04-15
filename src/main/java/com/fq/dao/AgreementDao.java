@@ -3,6 +3,8 @@ package com.fq.dao;
 import com.fq.model.Agreement;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface AgreementDao {
     String TABLE_NAME = " agreement ";
@@ -25,4 +27,7 @@ public interface AgreementDao {
     @Select({"select count(id) from ", TABLE_NAME,
             " where entity_id=#{entityId} and entity_type=#{entityType} and status = 0"})
     int getAgreementCount(@Param("entityId") int entityId, @Param("entityType") int entityType);
+
+    int  getAgreementCountByEntityIds(@Param("userIds") List<Integer> userIds,
+                                         @Param("entityType") int entityType);
 }

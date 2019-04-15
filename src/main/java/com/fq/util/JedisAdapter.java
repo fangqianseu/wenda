@@ -5,8 +5,7 @@ package com.fq.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -15,21 +14,11 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.List;
 
 @Component
-public class JedisAdapter implements InitializingBean, DisposableBean {
+public class JedisAdapter {
     private static final Logger logger = LoggerFactory.getLogger(JedisAdapter.class);
+
+    @Autowired
     private JedisPool jedisPool;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxTotal(50);
-        jedisPool = new JedisPool(jedisPoolConfig, "localhost", 6379);
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        jedisPool.close();
-    }
 
     public long lpush(String key, String value) {
         Jedis jedis = null;

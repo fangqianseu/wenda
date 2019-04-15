@@ -30,6 +30,10 @@ public class CommentService {
         return commentDao.selectCommentByEntity(entityId, entityType);
     }
 
+    public List<Integer> selectCommentIdsByUserId(int userId) {
+        return commentDao.selectCommentIdsByUserId(userId);
+    }
+
     public int getCommentcount(int entryId, int entryType) {
         return commentDao.getCommentCountofEntityType(entryId, entryType);
     }

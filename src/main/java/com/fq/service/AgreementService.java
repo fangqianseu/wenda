@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AgreementService {
     private static Logger logger = LoggerFactory.getLogger(AgreementService.class);
@@ -37,5 +39,9 @@ public class AgreementService {
             return 0;
         else
             return 1;
+    }
+
+    public int getAgreementCountByUserIds(List<Integer> userIds, int entityTypes) {
+        return agreementDao.getAgreementCountByEntityIds(userIds, entityTypes);
     }
 }

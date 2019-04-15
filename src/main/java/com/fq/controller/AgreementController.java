@@ -27,7 +27,7 @@ public class AgreementController {
     @Autowired
     private SessionHolder sessionHolder;
     @Autowired
-    private CommmentAgreementProducer COMMENTAGREEMENTProducer;
+    private CommmentAgreementProducer commmentAgreementProducer;
     @Autowired
     private UserService userService;
     @Autowired
@@ -44,7 +44,7 @@ public class AgreementController {
 
         // 引入异步事件 -- agreementEvent
         int toUserId = commentService.selectCommentById(commentId).getUserId();
-        COMMENTAGREEMENTProducer.buildEventModel(sessionHolder.getUser().getId(),
+        commmentAgreementProducer.buildEventModel(sessionHolder.getUser().getId(),
                 toUserId, userService.getUserById(toUserId).getName(), commentService.selectCommentById(commentId).getEntityId());
 
         return WendaUtil.getJSONString(0, String.valueOf(agreementCount));
