@@ -7,11 +7,13 @@ import com.fq.dao.QuestionDao;
 import com.fq.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class QuestionService {
     @Autowired
     private QuestionDao questionDao;

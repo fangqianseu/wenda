@@ -14,14 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Aspect
+
 public class TicketAspect {
     private static final Logger logger = LoggerFactory.getLogger(TicketAspect.class);
     @Autowired
     private JedisAdapter jedisAdapter;
 
+    @Transactional
     @Around(value = "bean(ticketService)&&execution(* getTicketByTicket(..))&& args(ticket)")
     public LoginTicket GetTicketByTicketAspect(ProceedingJoinPoint pjp, String ticket) throws Throwable {
         String key = RedisKeyUtil.getTICKETKey(ticket);
@@ -31,7 +34,8 @@ public class TicketAspect {
             loginTicket = JSONObject.parseObject(res, LoginTicket.class);
         } else {
             loginTicket = (LoginTicket) pjp.proceed();
-            jedisAdapter.setex(key, RedisKeyUtil.EXPRIE_TIME, JSONObject.toJSONString(loginTicket));
+            if (loginTicket.getStatus() == 0)
+                jedisAdapter.setex(key, RedisKeyUtil.EXPRIE_TIME, JSONObject.toJSONString(loginTicket));
         }
         return loginTicket;
     }

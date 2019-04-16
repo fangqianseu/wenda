@@ -38,7 +38,7 @@ public class LogController {
                         @RequestParam("password") String password,
                         @RequestParam(value = "next", required = false) String next,
                         @RequestParam("rememberme") boolean rememberme,
-                        HttpServletResponse response) {
+                        HttpServletResponse response) throws Exception {
         Map<String, Object> map = userService.login(username, password);
 
         if (map.containsKey("msg")) {
@@ -62,7 +62,7 @@ public class LogController {
                       @RequestParam("password") String password,
                       @RequestParam(value = "next", required = false) String next,
                       @RequestParam("rememberme") boolean rememberme,
-                      HttpServletResponse response) {
+                      HttpServletResponse response) throws Exception {
         Map<String, Object> map = userService.register(username, password);
 
         if (map.containsKey("msg")) {

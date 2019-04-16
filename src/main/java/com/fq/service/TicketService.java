@@ -9,17 +9,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Service
+
 public class TicketService {
     private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
     @Autowired
     private LoginTicketDao loginTicketDao;
 
-    public String addTicket(int userId) {
+    @Transactional(rollbackFor = {Exception.class})
+    public String addTicket(int userId) throws Exception {
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setUserId(userId);
         Date date = new Date();
@@ -29,8 +32,8 @@ public class TicketService {
         loginTicket.setTicket(UUID.randomUUID().toString().replace("-", ""));
 
         loginTicketDao.addTicket(loginTicket);
-
         logger.info("Ticket add: " + loginTicket.toString());
+
         return loginTicket.getTicket();
     }
 

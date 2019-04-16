@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private String headUrl = "https://avatars0.githubusercontent.com/u/";
@@ -38,7 +40,7 @@ public class UserService {
      * @param password
      * @return map 类型 保存错误信息 或者 登录 ticket
      */
-    public Map<String, Object> register(String username, String password) {
+    public Map<String, Object> register(String username, String password) throws Exception {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(username)) {
             map.put("msg", "用户名不能为空");
@@ -73,7 +75,7 @@ public class UserService {
         return map;
     }
 
-    public Map<String, Object> login(String username, String password) {
+    public Map<String, Object> login(String username, String password) throws Exception {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(username)) {
             map.put("msg", "用户名不能为空");

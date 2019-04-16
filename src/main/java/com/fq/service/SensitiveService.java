@@ -6,6 +6,7 @@ package com.fq.service;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Transactional
 public class SensitiveService implements InitializingBean {
     private TrieTree root;
 
