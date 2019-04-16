@@ -21,141 +21,103 @@ public class JedisAdapter {
     private JedisPool jedisPool;
 
     public String set(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.set(key, value);
+        String res = null;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.set(key, value);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return null;
+
+        return res;
     }
 
     public long setnx(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.setnx(key, value);
+        Long res = 0L;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.setnx(key, value);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return 0;
+        return res;
     }
 
     public String setex(String key, int seconds, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.setex(key, seconds, value);
+        String res = null;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.setex(key, seconds, value);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return null;
+        return res;
     }
 
     public String get(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.get(key);
+        String res = null;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.get(key);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return null;
+        return res;
     }
 
     public Long del(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.del(key);
+        Long res = 0L;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.del(key);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return 0L;
+        return res;
     }
 
     public long lpush(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.lpush(key, value);
+        Long res = 0L;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.lpush(key, value);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return 0;
+        return res;
     }
 
     public List<String> brpop(int timeout, String key) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.brpop(timeout, key);
+        List<String> res = null;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.brpop(timeout, key);
         } catch (Exception e) {
             logger.error("发生异常" + e.getMessage());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return null;
+        return res;
     }
 
 
-    public long hset(String key, Map<String, String> map) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
+    public void hset(String key, Map<String, String> map) {
+        try (Jedis jedis = jedisPool.getResource()) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 jedis.hset(key, entry.getKey(), entry.getValue());
             }
-            return 1;
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return 0;
     }
 
     public String hget(String key, String field) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.hget(key, field);
+        String res = null;
+        try (Jedis jedis = jedisPool.getResource()) {
+            res = jedis.hget(key, field);
         } catch (Exception e) {
             logger.error("发生异常" + e.toString());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            throw e;
         }
-        return null;
+        return res;
     }
 }

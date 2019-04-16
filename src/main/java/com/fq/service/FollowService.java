@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class FollowService {
     private static Logger logger = LoggerFactory.getLogger(FollowService.class);
 
@@ -22,6 +21,7 @@ public class FollowService {
     private FollowDao followDao;
 
 
+    @Transactional(rollbackFor = Exception.class)
     public void follow(Follow follow) {
         Follow temp = followDao.selectFollow(follow.getUserId(), follow.getEntityId(), follow.getEntityType());
         if (temp == null) {

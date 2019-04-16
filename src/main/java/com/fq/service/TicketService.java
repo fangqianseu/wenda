@@ -42,6 +42,7 @@ public class TicketService {
         return loginTicketDao.getTicket(ticket);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int delectTicket(String ticket) {
         logger.info("Ticket change: " + ticket);
         return loginTicketDao.setStaut(ticket, 1);

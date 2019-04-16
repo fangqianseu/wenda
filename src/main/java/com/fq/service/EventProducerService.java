@@ -19,13 +19,13 @@ import java.util.Date;
 import java.util.Map;
 
 @Service
-@Transactional
 public class EventProducerService {
     private static final Logger logger = LoggerFactory.getLogger(EventProducerService.class);
 
     @Autowired
     private JedisAdapter jedisAdapter;
 
+    @Transactional(rollbackFor = Exception.class)
     public boolean creatEventModel(EventType eventType, int entityId, int entityType, Map<String, String> details) {
         EventModel eventModel = new EventModel();
 
@@ -46,15 +46,11 @@ public class EventProducerService {
             return false;
     }
 
+
     private boolean commitEventModel(EventModel eventModel) {
-        try {
-            String key = RedisKeyUtil.getEventQueueKey();
-            String value = JSONObject.toJSONString(eventModel);
-            jedisAdapter.lpush(key, value);
-            return true;
-        } catch (Exception e) {
-            logger.error(e.toString());
-            return false;
-        }
+        String key = RedisKeyUtil.getEventQueueKey();
+        String value = JSONObject.toJSONString(eventModel);
+        jedisAdapter.lpush(key, value);
+        return true;
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableAsync
-@EnableTransactionManagement
 @SpringBootApplication
 public class WendaApplication extends SpringBootServletInitializer {
     @Override

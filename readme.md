@@ -14,4 +14,5 @@
 + 添加 feed流 逻辑，通过注册 EventHandler 来实现
 + 使用spring注解型事务，进行事务管理和回滚
 + 添加 redis 缓存 数据库数据，解决数据库、redis数据一致性问题
-    + 用户登录缓存: 将已登录用户 ticket 保存在 redis 中，避免重复查询数据库；
+    + 用户登录ticket缓存
+    + 用户信息user缓存

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -93,8 +94,20 @@ public class LogController {
 
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(@CookieValue("ticket") String ticket) {
-//        loginTicketCacheService.removeLoginCache(ticket);
+    public String logout(@CookieValue(value = "ticket") String ticket,
+                         HttpServletRequest httpServletRequest,
+                         HttpServletResponse httpServletResponse) {
+        Cookie c = null;
+        for (Cookie cookie : httpServletRequest.getCookies()) {
+            if (cookie.getName().equals("ticket")) {
+                c = cookie;
+                break;
+            }
+        }
+        if (c != null) {
+            c.setMaxAge(0);
+            httpServletResponse.addCookie(c);
+        }
         userService.loginout(ticket);
         return "redirect:/";
     }

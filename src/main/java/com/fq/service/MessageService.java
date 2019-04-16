@@ -13,13 +13,13 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 
 @Service
-@Transactional
 public class MessageService {
     @Autowired
     private MessageDao messageDao;
     @Autowired
     private SensitiveService sensitiveService;
 
+    @Transactional(rollbackFor = Exception.class)
     public int addMessage(Message message) {
         message.setContent(HtmlUtils.htmlEscape(message.getContent()));
         message.setContent(sensitiveService.filter(message.getContent()));
@@ -38,6 +38,7 @@ public class MessageService {
         return messageDao.getMessageUnreadCount(userId, conversationId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void setCommentRead(int messageId, int status) {
         messageDao.updateUnread(messageId, status);
     }

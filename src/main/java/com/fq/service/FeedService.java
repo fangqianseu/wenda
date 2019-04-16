@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class FeedService {
     @Autowired
     private FeedDao feedDao;
 
+    @Transactional(rollbackFor = Exception.class)
     public boolean addFeed(Feed feed) {
         feedDao.addFeed(feed);
         return feed.getId() > 0;

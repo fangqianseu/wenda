@@ -13,15 +13,14 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 
 @Service
-@Transactional
 public class QuestionService {
     @Autowired
     private QuestionDao questionDao;
     @Autowired
     private SensitiveService sensitiveService;
 
+    @Transactional(rollbackFor = Exception.class)
     public int addQuestion(Question question) {
-
         question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));
         question.setContent(HtmlUtils.htmlEscape(question.getContent()));
         question.setTitle(sensitiveService.filter(question.getTitle()));
@@ -38,6 +37,7 @@ public class QuestionService {
         return questionDao.selectQuestionById(qid);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int updateComment(int questionId, int commentcount) {
         return questionDao.updateCommentCount(questionId, commentcount);
     }

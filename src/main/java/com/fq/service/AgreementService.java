@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class AgreementService {
     private static Logger logger = LoggerFactory.getLogger(AgreementService.class);
 
     @Autowired
     private AgreementDao agreementDao;
 
+    @Transactional(rollbackFor = Exception.class)
     public void agree(Agreement agreement) {
         Agreement temp = agreementDao.selectAgreement(agreement.getUserId(), agreement.getEntityId(), agreement.getEntityType());
         if (temp == null) {

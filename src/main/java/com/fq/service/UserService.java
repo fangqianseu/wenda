@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private String headUrl = "https://avatars0.githubusercontent.com/u/";
@@ -40,6 +39,7 @@ public class UserService {
      * @param password
      * @return map 类型 保存错误信息 或者 登录 ticket
      */
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> register(String username, String password) throws Exception {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(username)) {
@@ -75,6 +75,7 @@ public class UserService {
         return map;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> login(String username, String password) throws Exception {
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(username)) {
@@ -116,6 +117,7 @@ public class UserService {
         return userDao.selectUserByname(name);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void loginout(String ticket) {
         logger.info("User loginout: " + ticket);
         ticketService.delectTicket(ticket);

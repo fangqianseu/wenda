@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Transactional
 public class SensitiveService implements InitializingBean {
     private TrieTree root;
 

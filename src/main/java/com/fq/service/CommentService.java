@@ -13,13 +13,13 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 
 @Service
-@Transactional
 public class CommentService {
     @Autowired
     private CommentDao commentDao;
     @Autowired
     private SensitiveService sensitiveService;
 
+    @Transactional(rollbackFor = Exception.class)
     public int commitAdd(Comment comment) {
         // js和 敏感词 过滤
         comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
