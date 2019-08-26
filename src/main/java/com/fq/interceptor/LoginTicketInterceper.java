@@ -10,7 +10,6 @@ import com.fq.service.TicketService;
 import com.fq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,6 +36,9 @@ public class LoginTicketInterceper implements HandlerInterceptor {
 //    @Transactional(rollbackFor = Exception.class)
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         Cookie c = null;
+        if (httpServletRequest.getCookies() == null)
+            return true;
+
         for (Cookie cookie : httpServletRequest.getCookies()) {
             if (cookie.getName().equals("ticket")) {
                 c = cookie;
@@ -63,7 +65,8 @@ public class LoginTicketInterceper implements HandlerInterceptor {
 
 
             LoginTicket ticket = ticketService.getTicketByTicket(c.getValue());
-            if (ticket == null || ticket.getStatus() != 0) return true;
+            if (ticket == null || ticket.getStatus() != 0)
+                return true;
             if (new Date().after(ticket.getExpired())) {
                 ticketService.delectTicket(ticket.getTicket());
                 return true;
