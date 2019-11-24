@@ -3,6 +3,7 @@ package com.fq.dao;
 import com.fq.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
@@ -13,6 +14,8 @@ public interface UserDao {
 
     @Insert({"insert ", TABLE_NAME, " (", INSET_FIELDS, ") values " +
             "(#{name},#{password},#{salt},#{headUrl})"})
+    // 主键回写
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id = #{id}"})
